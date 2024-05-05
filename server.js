@@ -4,6 +4,12 @@ const app = express();
 app.use(cors());
 const axios = require('axios');
 require('dotenv').config();
+const {Client}= require('pg');
+const dbURL = `postgres://raneem:0000@localhost:5432/movie`;
+const client = new Client(dbURL);
+const bodyParser = require('body-parser');
+app.use(bodyParser.urlencoded({extended: false}));
+app.use(bodyParser.json());
 const movieData = require('./Movie Data/data.json');
 const port = process.env.PORT;
 const apiKey = process.env.API_KEY;
@@ -15,6 +21,8 @@ app.get("/trending", trendingPageHandler);
 app.get("/search", searchHandler);
 app.get("/upcoming", handelUpcoming)
 app.get("/nowPlaying", handelNowPlaying)
+app.post("/addMovie", addMovieHandler)
+app.get("/getMovies",getMoviesHandler)
 app.get('*', error404Handler)
 
 
@@ -121,6 +129,28 @@ function handelNowPlaying(req, res) {
 }
 
 
+function addMovieHandler(req,res) {
+    console.log(req.body);
+    const {id,title,release_date,poster_path,overview}=req.body;
+    const sql = `INSERT INTO movies
+    VALUES ($1, $2, $3,$4,$5);`
+    const values = [id,title,release_date,poster_path,overview];
+    client.query(sql,values).then(()=>{
+        res.status(201).send("Data saved successfully to data base");
+
+    }).catch()
+}
+
+
+function getMoviesHandler(req,res) {
+    const sql = `SELECT * FROM movies`;
+    client.query(sql).then((result)=>{
+        const data = result.rows;
+        res.json(data);
+    }).catch()
+}
+
+
 const error500 = (err, req, res) => {
     res.status(500).send({
         status: 500,
@@ -134,8 +164,10 @@ function error404Handler(req, res) {
 
 
 /******************************************lesten port */
-
-app.listen(port, () => {
+client.connect().then(()=>{
+    app.listen(port, () => {
     console.log(`Iam listen for ${port}`)
 });
+}).catch()
+
 
