@@ -5,7 +5,7 @@ app.use(cors());
 const axios = require('axios');
 require('dotenv').config();
 const {Client}= require('pg');
-const dbURL = `postgres://raneem:0000@localhost:5432/movie`;
+const dbURL = `postgres://raneem:0000@localhost:5432/movies`;
 const client = new Client(dbURL);
 const bodyParser = require('body-parser');
 app.use(bodyParser.urlencoded({extended: false}));
@@ -131,10 +131,10 @@ function handelNowPlaying(req, res) {
 
 function addMovieHandler(req,res) {
     console.log(req.body);
-    const {id,title,release_date,poster_path,overview}=req.body;
+    const {id,title,release_date,poster_path,overview,comment}=req.body;
     const sql = `INSERT INTO movies
-    VALUES ($1, $2, $3,$4,$5);`
-    const values = [id,title,release_date,poster_path,overview];
+    VALUES ($1, $2, $3,$4,$5,$6);`
+    const values = [id,title,release_date,poster_path,overview,comment];
     client.query(sql,values).then(()=>{
         res.status(201).send("Data saved successfully to data base");
 
