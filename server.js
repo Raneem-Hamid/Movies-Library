@@ -23,6 +23,9 @@ app.get("/upcoming", handelUpcoming)
 app.get("/nowPlaying", handelNowPlaying)
 app.post("/addMovie", addMovieHandler)
 app.get("/getMovies",getMoviesHandler)
+app.put("/UPDATE/:id",updateHandler)
+app.delete("/DELETE/:id",deleteHandler)
+app.get("/getMovie/:id",getOneMovieHandler)
 app.get('*', error404Handler)
 
 
@@ -150,6 +153,37 @@ function getMoviesHandler(req,res) {
     }).catch()
 }
 
+function updateHandler(req,res) {
+    console.log(req.params);
+    let id = req.params.id;
+    let {title ,release_date ,poster_path ,overview ,comment } = req.body;
+    let sql = `UPDATE movies
+    SET id = $1, title = $2,release_date= $3,poster_path=$4,overview=$5,comment=$6
+    WHERE id = $1;`;
+    let values = [id,title ,release_date ,poster_path ,overview ,comment]
+    client.query(sql,values).then(()=>{
+res.send("Successfully updated");
+    }).catch()
+}
+
+function deleteHandler(req,res) {
+    let id = req.params.id;
+    let sql = `DELETE FROM movies WHERE id=$1;`;
+    let values = [id];
+    client.query(sql,values).then(()=>{
+        res.send('successfully deleted');
+    }).catch()
+}
+
+function getOneMovieHandler(req,res) {
+    let id = req.params.id;
+    const sql = `SELECT * FROM movies WHERE id=$1`;
+    let values = [id];
+    client.query(sql,values).then((result)=>{
+        const data = result.rows;
+        res.json(data);
+    }).catch()
+}
 
 const error500 = (err, req, res) => {
     res.status(500).send({
