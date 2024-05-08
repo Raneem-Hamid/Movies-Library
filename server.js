@@ -26,7 +26,7 @@ app.get("/getMovies",getMoviesHandler)
 app.put("/UPDATE/:id",updateHandler)
 app.delete("/DELETE/:id",deleteHandler)
 app.get("/getMovie/:id",getOneMovieHandler)
-app.get('*', error404Handler)
+// app.get('*', error404Handler)
 
 
 /*****************************************constructor***********************/
@@ -117,7 +117,7 @@ function handelUpcoming(req, res) {
             console.log(error);
         });
 
-
+    }
 
 function handelNowPlaying(req, res) {
     const url = `https://api.themoviedb.org/3/movie/now_playing?api_key=${apiKey}&language=en-US&query=The&page=1`
@@ -185,21 +185,23 @@ function getOneMovieHandler(req,res) {
     }).catch()
 }
 
-const error500 = (err, req, res) => {
+const error500 = (err, req, res,next) => {
 
     res.status(500).send({
         status: 500,
         responseText: "Server Error: Something went wrong"
     })
 }
-app.use(error500);
 
 
-function error404Handler(req, res) {
+
+function error404Handler(req, res ,next ) {
     res.status(404).send("page not found 404!");
 }
 
 
+app.use(error404Handler);
+app.use(error500);
 /******************************************lesten port */
 client.connect().then(()=>{
     app.listen(port, () => {
