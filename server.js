@@ -117,7 +117,7 @@ function handelUpcoming(req, res) {
             console.log(error);
         });
 
-}
+
 
 function handelNowPlaying(req, res) {
     const url = `https://api.themoviedb.org/3/movie/now_playing?api_key=${apiKey}&language=en-US&query=The&page=1`
@@ -186,11 +186,14 @@ function getOneMovieHandler(req,res) {
 }
 
 const error500 = (err, req, res) => {
+
     res.status(500).send({
         status: 500,
         responseText: "Server Error: Something went wrong"
     })
 }
+app.use(error500);
+
 
 function error404Handler(req, res) {
     res.status(404).send("page not found 404!");
