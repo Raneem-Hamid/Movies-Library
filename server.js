@@ -40,10 +40,13 @@ function favoritePageHandler(req,res) {
 };
 
 
-const error500 =(error=>{
-    res.status(500).send('internal server error')
-})
-
+const error500 = (err, req, res, next) => {
+    res.status(500).send({
+        status: 500,
+        responseText: "Server Error: Something went wrong"
+    })
+}
+app.use(error500);
 
 
 function error404Handler (req,res){
