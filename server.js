@@ -40,12 +40,11 @@ function favoritePageHandler(req,res) {
 };
 
 
-const error500 =(err,req,res)=>{
-    res.status(500).send({
-        status:500,
-        responseText: "Server Error: Something went wrong"
-    })
-}
+const error500 =(error=>{
+    res.status(500).send('internal server error')
+})
+
+
 
 function error404Handler (req,res){
 res.status(404).send("page not found 404!");
