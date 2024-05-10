@@ -13,7 +13,7 @@ app.use(bodyParser.json());
 const movieData = require('./Movie Data/data.json');
 const port = process.env.PORT;
 const apiKey = process.env.API_KEY;
-/***************************************************/
+/********************** Deploying Part *****************************/
 const DataBase=process.env.PG_DATABASE;
 const UserName=process.env.PG_USER;
 const password=process.env.PG_PASSWORD;
