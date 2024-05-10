@@ -4,15 +4,25 @@ const app = express();
 app.use(cors());
 const axios = require('axios');
 require('dotenv').config();
-const {Client}= require('pg');
-const dbURL = `postgres://raneem:0000@localhost:5432/movies`;
-const client = new Client(dbURL);
+// const {Client}= require('pg');
+// const dbURL = `postgres://raneem:0000@localhost:5432/movies`;
+// const client = new Client(dbURL);
 const bodyParser = require('body-parser');
 app.use(bodyParser.urlencoded({extended: false}));
 app.use(bodyParser.json());
 const movieData = require('./Movie Data/data.json');
 const port = process.env.PORT;
 const apiKey = process.env.API_KEY;
+/***************************************************/
+const DataBase=process.env.PG_DATABASE;
+const UserName=process.env.PG_USER;
+const password=process.env.PG_PASSWORD;
+const Host=process.env.PG_HOST;
+const PORT=process.env.PG_PORT;
+const {Client}= require('pg');
+const dbURL = `postgres://${UserName}:${password}@${Host}:${PORT}/${DataBase}`;
+const client = new Client(dbURL);
+
 // console.log(apiKey);
 /***************************************Routs ***********************************/
 app.get("/", homePageHandler);
